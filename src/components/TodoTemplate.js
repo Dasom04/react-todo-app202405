@@ -3,6 +3,7 @@ import TodoHeader from './TodoHeader';
 import TodoMain from './TodoMain';
 import TodoInput from './TodoInput';
 import '../scss/TodoTemplate.scss';
+import { ImTerminal } from 'react-icons/im';
 
 const TodoTemplate = () => {
   // 백엔드 서버에 할 일 목록)(json)을 요청(fetch) 해서 받아와야함. -> 나중에 하자.
@@ -69,10 +70,45 @@ const TodoTemplate = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const copyTodos = [...todos];
+  // 할 일 체크 처리 함수
+  const checkTodo = (id) => {
+    // for (let cTodo of copyTodos) {
+    //   if (cTodo.id === id) {
+    //     cTodo.done = !cTodo.done;
+    //   }
+    // }
+    // setTodos(copyTodos);
+
+    // 고차함수 방식
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id
+          ? { ...todo, done: !todo.done }
+          : todo,
+      ),
+    );
+  };
+
+  // 체크가 안 된 할 일의 개수를 카운트 하기 (done이 false인 객체가 몇개인지 세기)
+  const countRestTodo = () =>
+    todos.filter((todo) => !todo.done).length;
+
+  //const countRestTodo = () => {
+  // const filteredTodos = todos.filter(
+  //   (todo) => !todo.done,
+  // );
+  // return filteredTodos.length;
+  // };
+
   return (
     <div className='TodoTemplate'>
-      <TodoHeader />
-      <TodoMain todoList={todos} remove={removeTodo} />
+      <TodoHeader count={countRestTodo} />
+      <TodoMain
+        todoList={todos}
+        remove={removeTodo}
+        check={checkTodo}
+      />
       <TodoInput addTodo={addTodo} />
     </div>
   );
