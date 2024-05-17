@@ -7,7 +7,10 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { API_BASE_URL } from '../../config/host-config';
+import {
+  API_BASE_URL,
+  USER,
+} from '../../config/host-config';
 
 const Join = () => {
   // 상태 변수로 회원가입 입력값 관리
@@ -60,31 +63,6 @@ const Join = () => {
     });
   };
 
-  // 이메일 중복체크 서버 통신 함수
-  const fetchDuplicateCheck = (email) => {
-    let msg = '';
-    let flag = false;
-
-    fetch(`${API_BASE_URL}${USER}/check?email=${email}`)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result) {
-          msg = '이메일이 중복되었습니다.';
-        } else {
-          msg = '사용 가능한 이메일 입니다.';
-          flag = true;
-        }
-
-        // 중복 확인 후 상태값 변경.
-        saveInputState({
-          key: 'email',
-          inputValue: email,
-          msg,
-          flag,
-        });
-      });
-  };
-
   // 이름 입력창 체인지 이벤트 핸들러
   const nameHandler = (e) => {
     const nameRegex = /^[가-힣]{2,5}$/;
@@ -104,11 +82,63 @@ const Join = () => {
     }
 
     // saveInputState에게 이 핸들러에서 처리한 여러가지 값을 객체로 한번에 넘기기.
-    // 중복 확인 후에만 상태 변경하는것이 아닙니다!
-    // 입력창이 비거나, 정규 표햔식 위반인 경우에도 상태는 변경 되어야 합니다.
     saveInputState({
-      key: 'emal',
-      inputValue: email,
+      key: 'userName',
+      inputValue,
+      msg,
+      flag,
+    });
+  };
+
+  // 이메일 중복 체크 서버 통신 함수
+  const fetchDuplicateCheck = (email) => {
+    let msg = '';
+    let flag = false;
+
+    fetch(`${API_BASE_URL}${USER}/check?email=${email}`)
+      .then((res) => res.json())
+      .then((result) => {
+        console.log('result: ', result);
+        if (result) {
+          msg = '이메일이 중복되었습니다.';
+        } else {
+          msg = '사용 가능한 이메일 입니다.';
+          flag = true;
+        }
+
+        // 중복 확인 후 상태값 변경.
+        saveInputState({
+          key: 'email',
+          inputValue: email,
+          msg,
+          flag,
+        });
+      });
+  };
+
+  // 이메일 입력창 체인지 이벤트 핸들러
+  const emailHandler = (e) => {
+    const inputValue = e.target.value;
+    const emailRegex =
+      /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+
+    let msg;
+    let flag = false;
+
+    if (!inputValue) {
+      msg = '이메일은 필수값 입니다!';
+    } else if (!emailRegex.test(inputValue)) {
+      msg = '이메일 형식이 올바르지 않습니다.';
+    } else {
+      // 이메일 중복 체크
+      fetchDuplicateCheck(inputValue);
+    }
+
+    // 중복 확인 후에만 상태 변경 하는 것이 아닙니다!
+    // 입력창이 비거나, 정규 표현식 위반인 경우에도 상태는 변경 되어야 합니다.
+    saveInputState({
+      key: 'email',
+      inputValue,
       msg,
       flag,
     });
@@ -158,6 +188,7 @@ const Join = () => {
               label='이메일 주소'
               name='email'
               autoComplete='email'
+              onChange={emailHandler}
             />
             <span
               style={
