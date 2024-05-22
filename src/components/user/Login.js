@@ -17,6 +17,7 @@ import {
 import AuthContext from '../../utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackBar from '../layout/CustomSnackBar';
+import { KAKAO_AUTH_URL } from '../../config/kakao-config';
 
 const Login = () => {
   const REQUEST_URL = BASE + USER + '/signin';
@@ -67,7 +68,7 @@ const Login = () => {
     }
 
     const { token, userName, email, role } =
-      await res.json(); // 서버에 전달된 json을 변수에 저장.
+      await res.json(); // 서버에서 전달된 json을 변수에 저장.
 
     // Context API를 사용하여 로그인 상태를 업데이트 합니다.
     onLogin(token, userName, role);
@@ -82,6 +83,7 @@ const Login = () => {
       body: JSON.stringify({
         email: $email.value,
         password: $password.value,
+      }),
     })
       .then((res) => res.json())
       .then((result) => {
@@ -152,6 +154,15 @@ const Login = () => {
                 >
                   로그인
                 </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <a href={KAKAO_AUTH_URL}>
+                  <img
+                    style={{ width: '100%' }}
+                    alt='kakaobtn'
+                    src={require('../../assets/img/kakao_login_medium_wide.png')}
+                  />
+                </a>
               </Grid>
             </Grid>
           </form>
