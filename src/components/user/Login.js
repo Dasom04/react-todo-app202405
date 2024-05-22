@@ -40,10 +40,6 @@ const Login = () => {
   // 서버에 비동기 로그인 요청(AJAX 요청)
   // 함수 앞에 async를 붙이면 해당 함수는 프로미스 객체를 바로 리턴합니다.
   const fetchLogin = async () => {
-    // 이메일과 비밀번호를 직접 지목해서 얻어오세요. (getElementById로 직접 지목해서 가져오세요.)
-    // 요청 방식: POST / email, password라는 이름으로 JSON을 전송하세요.
-    // 응답 데이터를 console.log로 확인하세요.
-
     // 이메일과 비밀번호 입력 태그 취득하기
     const $email = document.getElementById('email');
     const $password = document.getElementById('password');

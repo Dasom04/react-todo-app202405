@@ -1,5 +1,3 @@
-import { reduce } from 'lodash';
-
 export const initialState = {
   userValue: {
     userName: '',
@@ -21,8 +19,8 @@ export const initialState = {
 };
 
 // 회원 가입쪽에서 여러 상태값을 중앙 집중화 해서 처리할 리듀서 함수.
-// state: 자신의 상태값이 전달.
-// action.type: 어떠한 상태 값을 변경하는지에 대한 값.
+// state: 최신의 상태값이 전달.
+// action.type: 어떠한 상태값을 변경하는지에 대한 값.
 // action.key: 입력창이 어디인지.
 // action.value: 입력값이 무엇인지.
 export const joinReducer = (state, action) => {

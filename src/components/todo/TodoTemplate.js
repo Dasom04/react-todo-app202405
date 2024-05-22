@@ -14,14 +14,14 @@ import {
 const TodoTemplate = () => {
   const redirection = useNavigate();
 
-  // 백엔드 서버에 할 일 목록)(json)을 요청(fetch)해서 받아와야 함.
+  // 백엔드 서버에 할 일 목록(json)을 요청(fetch)해서 받아와야 함.
   const API_BASE_URL = BASE + TODO;
   const API_USER_URL = BASE + USER;
 
   // todos 배열을 상태 관리
   const [todos, setTodos] = useState([]);
 
-  // 로딩 상태값 관리 (처음에는 로딩이 무조건 필요하기 때문에 true -> 로딩이 끝나면 false로 전환)
+  // 로딩 상태값 관리 (처음에는 로딩이 무조건 필요하기 때문에 true -> 로딩 끝나면 false로 전환)
   const [loading, setLoading] = useState(true);
 
   // 로그인 인증 토큰 얻어오기

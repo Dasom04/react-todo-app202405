@@ -4,18 +4,24 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../scss/Header.scss';
 import AuthContext from '../../utils/AuthContext';
-import { API_BASE_URL } from '../../config/host-config';
-import { RiUserStarFill } from 'react-icons/ri';
+import {
+  API_BASE_URL,
+  USER,
+} from '../../config/host-config';
 
 const Header = () => {
   const profileRequestURL = `${API_BASE_URL}${USER}/load-profile`;
 
   // 프로필 이미지 url 상태 변수
-  const [] RiUserStart 
+  const [profileUrl, setProfileUrl] = useState(null);
 
   const redirection = useNavigate();
   // AuthContext에서 로그인 상태를 가져옵니다.
@@ -24,13 +30,13 @@ const Header = () => {
 
   // 로그아웃 핸들러
   const logoutHandler = () => {
-    // AuthContext 의 onLogout 함수를 호출하여 로그인 상태를 업데이트 합니다.
+    // AuthContext의 onLogout 함수를 호출하여 로그인 상태를 업데이트 합니다.
     onLogout();
     redirection('/login');
   };
 
   // 프로필 이미지 요청
-  const fethProfileImage = async () => {
+  const fetchProfileImage = async () => {
     const res = await fetch(profileRequestURL, {
       method: 'GET',
       headers: {
@@ -40,26 +46,25 @@ const Header = () => {
     });
 
     if (res.status === 200) {
-      // 서버에서는 byte[]로 직영화된 이미지가 응답괴므로
-      // bl0b()통해 전달받아야 한다 (JSON()xxxx
-      const profileBlod  = aqut();
-      // 해당 이미지를 impURL로 변경
-
-      const img = 
-    }else {xxxx
-
+      // 서버에서는 byte[]로 직렬화된 이미지가 응답되므로
+      // blob()을 통해 전달받아야 한다. (json() xxxxx)
+      const profileBlob = await res.blob();
+      // 해당 이미지를 imgUrl로 변경
+      const imgUrl =
+        window.URL.createObjectURL(profileBlob);
+      setProfileUrl(imgUrl);
+    } else {
+      const err = await res.text();
+      console.log('err: ', err);
+      setProfileUrl(null);
     }
-
   };
 
-  // 로그인 상태의 변화할 때 화면이 제레[ㄴ더링ㅇ 괴고,
-    // 그레ㅔ 맞는 ㅚ뤙릐 ㅠㅡ로핗 이미지가 요청이 들어갈 슁ㄲㅆ 있동록 최
-  ]
-
-  useEffect (() -> {
-    if(isLoggedIn) fetchProfilleImage()
-  },[isLoggedIn])
-
+  // 로그인의 상태가 변화할 때 화면이 리렌더링 되고,
+  // 그에 맞는 회원의 프로필 이미지 요청이 들어갈 수 있도록 처리.
+  useEffect(() => {
+    if (isLoggedIn) fetchProfileImage();
+  }, [isLoggedIn]);
 
   return (
     <AppBar
@@ -82,12 +87,14 @@ const Header = () => {
                 {isLoggedIn ? userName + '님' : '오늘'}의
                 할일
               </Typography>
-              <source=> 
 
               {isLoggedIn && (
                 <img
-                  src=''
-                  alt={pfofi}
+                  src={
+                    profileUrl ||
+                    require('../../assets/img/anonymous.jpg')
+                  }
+                  alt='프사프사'
                   style={{
                     marginLeft: 20,
                     width: 75,

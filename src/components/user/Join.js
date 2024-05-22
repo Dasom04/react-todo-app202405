@@ -17,12 +17,12 @@ import {
   USER,
 } from '../../config/host-config';
 import { initialState, joinReducer } from './joinReducer';
-import { debounce, method } from 'lodash';
+import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import '../../scss/Join.scss';
 
 const Join = () => {
-  // useRef를 사용해서 태그 참조 하기
+  // useRef를 사용해서 태그 참조하기
   const $fileTag = useRef();
 
   // 리다이렉트 효과 사용하기
@@ -57,7 +57,7 @@ const Join = () => {
     });
   };
 
-  // 각각의 핸들러에 붙어 있는 디바운스 함수를 일괄적으로 처리
+  // 각각의 핸들러에 붙어 있는 디바운스 함수를 일괄적 처리
   // useCallback: 함수의 메모이제이션을 위한 훅. (함수의 선언을 기억했다가 재사용하기 위한 훅)
   // 상태값 변경에 의해 화면의 재 렌더링이 발생할 때, 컴포넌트의 함수들도 재 선언이 됩니다.
   // useCallback으로 함수를 감싸 주시면 이전에 생성된 함수를 기억했다가 재 사용하도록 하기 때문에
@@ -68,7 +68,7 @@ const Join = () => {
       updateState(key, inputValue, msg, flag);
     }, 500),
     [],
-  ); // 의존성 배열을 비워놓으면 첫 렌더링때 함수가 선언되고 다시는 변하지 않는다. (재선언 되지 않음)
+  ); // 의존성 배열을 비워놓으면, 첫 렌더링 때 함수가 선언되고 다시는 재선언 되지 않습니다.
   // 만약 함수의 선언이 특정 상태가 변할 때 재선언 되어야 한다면, 의존성 배열에 상태 변수를 선언하시면 됩니다.
 
   // 이름 입력창 체인지 이벤트 핸들러
@@ -153,7 +153,7 @@ const Join = () => {
       msg = '비밀번호는 필수입니다.';
     } else if (!pwRegex.test(inputValue)) {
       msg =
-        '8글자 이상의 영문, 숫자, 특수문자를 포함해 주세요';
+        '8글자 이상의 영문, 숫자, 특수문자를 포함해 주세요.';
     } else {
       msg = '사용 가능한 비밀번호 입니다.';
       flag = true;
@@ -222,12 +222,11 @@ const Join = () => {
       $fileTag.current.files[0],
     );
 
-    const res = await (API_BASE_URL + USER,
-    {
+    const res = await fetch(API_BASE_URL + USER, {
       method: 'POST',
       body: userFormData,
     });
-    if (res.state === 200) {
+    if (res.status === 200) {
       const data = await res.json();
       alert(
         `${data.userName}(${data.email})님 회원가입에 성공했습니다.`,
@@ -244,7 +243,7 @@ const Join = () => {
     e.preventDefault();
 
     if (isValid()) {
-      // fetch를 사용한 회원가입 요청.
+      // fetch를 사용한 회원 가입 요청.
       fetchSignUpPost();
     } else {
       alert('입력란을 다시 확인해 주세요!');
@@ -254,10 +253,10 @@ const Join = () => {
   // 이미지 파일 상태 변수
   const [imgFile, setImgFile] = useState(null);
 
-  // 이미지 파일을 선택했을떄 썸네일 뿌리는 핸들러
-  const showThumnailHandler = (e) => {
+  // 이미지 파일을 선택했을 때 썸네일 뿌리는 핸들러
+  const showThumbnailHandler = (e) => {
     // 첨부된 파일 정보
-    const file = $fileTag.current.file[0];
+    const file = $fileTag.current.files[0];
 
     // 첨부한 파일 이름을 얻은 후 확장자만 추출. (소문자로 일괄 변경)
     const fileExt = file.name
@@ -271,9 +270,9 @@ const Join = () => {
       fileExt !== 'gif'
     ) {
       alert(
-        '이미지 파일만 주세요(jpg, png, jpeg ,gif)만 등록이 가능합니다!',
+        '이미지 파일(jpg, png, jpeg, gif)만 등록이 가능합니다!',
       );
-      // 형식에 맞지 않는 파일을 첨부한 것이 파악됐다면, input의 상태도 원래대로 돌려놓아야한다.
+      // 형식에 맞지 않는 파일을 첨부한 것이 파악됐다면, input의 상태도 원래대로 돌려놓아야 한다.
       // 그렇지 않으면 잘못된 파일을 input 태그가 여전히 기억하게됨 -> 서버 요청 시 에러 유발!
       $fileTag.current.value = '';
       return;
@@ -325,7 +324,7 @@ const Join = () => {
               style={{ display: 'none' }}
               accept='image/*'
               ref={$fileTag}
-              onChange={showThumnailHandler}
+              onChange={showThumbnailHandler}
             />
           </Grid>
           <Grid item xs={12}>
