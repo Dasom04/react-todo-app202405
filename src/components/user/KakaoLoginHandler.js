@@ -23,7 +23,7 @@ const KakaoLoginHandler = () => {
 
   useEffect(() => {
     // 컴포넌트가 렌더링 될 때, 인가 코드를 백엔드로 전송하는 fetch 요청
-    const kakaologin = async () => {
+    const kakaoLogin = async () => {
       const res = await fetch(
         REQUEST_URL + '/kakaologin?code=' + code,
       );
@@ -37,7 +37,7 @@ const KakaoLoginHandler = () => {
       redirection('/');
     };
 
-    kakaologin();
+    kakaoLogin();
   }, []);
 
   return <div>KakaoLoginHandler</div>;
