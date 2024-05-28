@@ -60,25 +60,23 @@ const Login = () => {
     });
     */
 
-    const res = await axios.post(REQUEST_URL, {
-      // url, 넣을 데이터
-      email: $email.value,
-      password: $password.value,
-    });
+    try {
+      const res = await axios.post(REQUEST_URL, {
+        // url, 넣을 데이터
+        email: $email.value,
+        password: $password.value,
+      });
 
-    if (res.status === 400) {
-      const text = await res.text(); // then()쓴거랑 똑같은 효과!!
-      alert(text);
-      return;
+      const { token, userName, role } = await res.data;
+
+      // Context API를 사용하여 로그인 상태를 업데이트 합니다.
+      onLogin(token, userName, role);
+
+      // 홈으로 리다이렉트
+      redirection('/');
+    } catch (error) {
+      alert(error.response.data);
     }
-
-    const { token, userName, role } = await res.data;
-
-    // Context API를 사용하여 로그인 상태를 업데이트 합니다.
-    onLogin(token, userName, role);
-
-    // 홈으로 리다이렉트
-    redirection('/');
   };
 
   const loginHandler = (e) => {
